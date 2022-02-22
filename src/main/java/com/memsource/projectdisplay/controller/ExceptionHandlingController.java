@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionHandlingController {
 
     @ExceptionHandler(value = {MemsourceLoginFailedException.class})
-    protected ResponseEntity<Object> handleFailedMemsourceLogin() {
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    protected ResponseEntity<String> handleFailedMemsourceLogin() {
+        return new ResponseEntity<>("Could not login to Memsource account", HttpStatus.UNAUTHORIZED);
     }
 }

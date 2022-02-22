@@ -4,4 +4,8 @@ public class MemsourceLoginFailedException extends RuntimeException {
     public MemsourceLoginFailedException(String errorMessage, Throwable exception) {
         super(errorMessage, exception);
     }
+
+    public MemsourceLoginFailedException(String errorMessage) {
+        super(errorMessage);
+    }
 }

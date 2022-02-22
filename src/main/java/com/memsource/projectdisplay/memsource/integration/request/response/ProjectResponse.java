@@ -1,12 +1,15 @@
 package com.memsource.projectdisplay.memsource.integration.request.response;
 
+import com.memsource.projectdisplay.memsource.integration.model.Project;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
-@Setter
 @Getter
-public class LoginResponse {
-    private String token;
+@Setter
+public class ProjectResponse {
+    private List<Project> content;
 }

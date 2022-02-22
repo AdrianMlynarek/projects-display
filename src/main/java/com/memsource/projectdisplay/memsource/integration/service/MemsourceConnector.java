@@ -4,7 +4,6 @@ import com.memsource.projectdisplay.memsource.integration.config.MemsourceAccoun
 import com.memsource.projectdisplay.memsource.integration.exception.MemsourceLoginFailedException;
 import com.memsource.projectdisplay.memsource.integration.request.LoginRequest;
 import com.memsource.projectdisplay.memsource.integration.request.response.LoginResponse;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -20,7 +19,6 @@ import java.util.List;
 import static com.memsource.projectdisplay.memsource.integration.MemsourceConsts.MEMSOURCE_LOGIN_ENDPOINT;
 
 @Service
-@Getter
 @Slf4j
 public class MemsourceConnector {
 
@@ -39,6 +37,14 @@ public class MemsourceConnector {
         memsourceApiToken = acquireSecurityToken(memsourceAccount);
     }
 
+    public String getMemsourceApiToken() {
+        if (memsourceApiToken != null) {
+            return memsourceApiToken;
+        }
+        log.error("Memsource account not configured, can't obtain security token!");
+        throw new MemsourceLoginFailedException("Memsource account not configured, use /login endpoint first!");
+    }
+
     private String acquireSecurityToken(MemsourceAccount memsourceAccount) {
         log.info("Acquiring Memsource security token");
         HttpEntity<LoginRequest> loginRequestPayload = buildMemsourceLoginPayload(memsourceAccount);
@@ -46,7 +52,9 @@ public class MemsourceConnector {
         ResponseEntity<LoginResponse> loginResponse;
         try {
             loginResponse = restTemplate.exchange(MEMSOURCE_LOGIN_ENDPOINT, HttpMethod.POST, loginRequestPayload, LoginResponse.class);
-            return loginResponse.getBody().getToken();
+            String memsourceToken = loginResponse.getBody().getToken();
+            log.info("Memsource token successfully acquired");
+            return memsourceToken;
         } catch (Exception e) {
             log.error("Failed to login to Memsource! Error:", e);
             throw new MemsourceLoginFailedException("Login to Memsource failed!", e);
