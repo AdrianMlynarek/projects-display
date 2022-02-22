@@ -42,5 +42,4 @@ class MemsourceConnectorTest {
         // then
         Assertions.assertThat(memsourceConnector.getMemsourceApiToken()).isEqualTo(mockedToken);
     }
-
 }

@@ -36,22 +36,20 @@ public class MemsourceConnector {
     }
 
     public void loginToMemsource(MemsourceAccount memsourceAccount) {
-        if (memsourceApiToken == null) {
-            memsourceApiToken = acquireSecurityToken(memsourceAccount);
-        }
+        memsourceApiToken = acquireSecurityToken(memsourceAccount);
     }
 
     private String acquireSecurityToken(MemsourceAccount memsourceAccount) {
         log.info("Acquiring Memsource security token");
         HttpEntity<LoginRequest> loginRequestPayload = buildMemsourceLoginPayload(memsourceAccount);
 
-        ResponseEntity<LoginResponse> loginResponse = restTemplate.exchange(MEMSOURCE_LOGIN_ENDPOINT, HttpMethod.POST, loginRequestPayload, LoginResponse.class);
-
-        if (isMemsourceLoginResponseSuccessfullyReceived(loginResponse)) {
+        ResponseEntity<LoginResponse> loginResponse;
+        try {
+            loginResponse = restTemplate.exchange(MEMSOURCE_LOGIN_ENDPOINT, HttpMethod.POST, loginRequestPayload, LoginResponse.class);
             return loginResponse.getBody().getToken();
-        } else {
-            log.error("Failed to login to Memsource! Response: {}", loginResponse);
-            throw new MemsourceLoginFailedException("Login to Memsource failed! Status code:" + loginResponse.getStatusCodeValue());
+        } catch (Exception e) {
+            log.error("Failed to login to Memsource! Error:", e);
+            throw new MemsourceLoginFailedException("Login to Memsource failed!", e);
         }
     }
 
@@ -64,10 +62,6 @@ public class MemsourceConnector {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType((MediaType.APPLICATION_JSON));
         return new HttpEntity<>(loginPayload, headers);
-    }
-
-    private boolean isMemsourceLoginResponseSuccessfullyReceived(ResponseEntity<LoginResponse> loginResponse) {
-        return loginResponse.getBody() != null && HttpStatus.OK.equals(loginResponse.getStatusCode());
     }
 
     private List<HttpMessageConverter<?>> getJsonMessageConverters() {
