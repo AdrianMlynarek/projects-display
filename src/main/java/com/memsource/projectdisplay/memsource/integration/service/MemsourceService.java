@@ -1,15 +1,15 @@
 package com.memsource.projectdisplay.memsource.integration.service;
-import com.memsource.projectdisplay.memsource.integration.config.MemsourceAccount;
-import com.memsource.projectdisplay.memsource.integration.exception.MemsourceLoginFailedException;
+
 import com.memsource.projectdisplay.memsource.integration.model.Project;
-import com.memsource.projectdisplay.memsource.integration.repository.MemsourceAccountRepository;
+
 import com.memsource.projectdisplay.memsource.integration.request.ListProjectsRequest;
-import com.memsource.projectdisplay.memsource.integration.request.LoginRequest;
-import com.memsource.projectdisplay.memsource.integration.request.response.LoginResponse;
 import com.memsource.projectdisplay.memsource.integration.request.response.ProjectResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,15 +21,11 @@ import static com.memsource.projectdisplay.memsource.integration.MemsourceConsts
 @Slf4j
 public class MemsourceService {
 
-    private final MemsourceAccountRepository memsourceRepository;
     private final MemsourceConnector memsourceConnector;
     private final RestTemplate restTemplate;
 
     @Autowired
-    public MemsourceService (MemsourceAccountRepository memsourceRepository,
-                             MemsourceConnector memsourceConnector,
-                             RestTemplate restTemplate) {
-      this.memsourceRepository = memsourceRepository;
+    public MemsourceService (MemsourceConnector memsourceConnector, RestTemplate restTemplate) {
       this.memsourceConnector = memsourceConnector;
       this.restTemplate = restTemplate;
     }

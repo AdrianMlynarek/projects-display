@@ -1,10 +1,9 @@
 package com.memsource.projectdisplay.memsource.integration.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Project {
